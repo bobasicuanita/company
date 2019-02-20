@@ -143,7 +143,7 @@ passport.deserializeUser(function(user,done){
 
 app.get("/", function(req, res) {
   if (req.isAuthenticated()) {
-    res.redirect("/log");
+    res.redirect("/log/:page");
   } else {
     res.render("home", {errorMessage: req.flash("error")});
   }
@@ -445,7 +445,7 @@ app.route("/log/:page")
 app.post("/deletelog", function(req, res) {
       Log.deleteOne({_id: req.body.id}, function(err) {
         if(!err) {
-          res.redirect("/log");
+          res.redirect("/log/:page");
         } else {
           res.send(err);
         }
