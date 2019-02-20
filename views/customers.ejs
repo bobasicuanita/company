@@ -1,0 +1,208 @@
+<!-- include header -->
+<%- include("header") %>
+
+<!-- Intro Area -->
+<div class="dropdown">
+    <a class="nav-link dropdown-toggle" href="" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Προφίλ</a>
+    <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+      <a class="dropdown-item" href="/profile/<%=userid%>">Ρυθμίσεις</a>
+      <a class="dropdown-item" href="/logout">Αποσύνδεση</a>
+    </div>
+  </div>
+</ul>
+</div>
+</nav>
+
+<div class="row customerintro">
+  <div class="col-lg-6">
+    <h1 class="section-title">Καρτέλα SDS</h1>
+  </div>
+  <div class="col-lg-6">
+    <div class="card card-totals">
+      <div class="card-body">
+          <ul class="totals">
+              <li class="totals-item">
+                Συνολικός Τζίρος: <%= turnover %>
+              </li>
+              <li class="totals-item">
+                Συνολικές πληρωμές: <%= income %>
+              </li>
+              <li class="totals-item">
+                Υπόλοιπο: <%= parseFloat(turnover - income).toFixed(2) %>
+              </li>
+            </ul>
+      </div>  
+    </div>
+  </div>
+</div>
+</div>
+</section>
+
+<!-- Vertical Navbar -->
+
+<div class="container-fluid" id="main">
+  <div class="row">
+    <div class="col-lg-2 list">
+      <ul class="nav navbar-text nav-pills nav-stacked sidebar">
+        <li class="nav-item listitem" id="newentry"><a class="listlink" data-toggle="modal" data-target="#exampleModalCenter">Νέα Χρέωση</a></li>
+
+        <li class="nav-item listitem">
+          <form action="/deletecustomer" method="post">
+            <a class="listlink deletefromcustomer">Διαγραφή</a></form>
+        </li>
+      </ul>
+
+      <!-- Pop-up -->
+      <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLongTitle">Προσθήκη Νέας Χρέωσης</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <form action="/customers" method="post">
+                <div class="form-group">
+                  <label for="inputdate">Ημερομηνία</label>
+                  <input name="date" type="date" class="form-control" id="inputdate" required="">
+                </div>
+                <div class="form-group">
+                  <label for="inputfrom">Απο/Για</label>
+                  <select name="from" class="custom-select mr-sm-2" id="inputfrom">
+                    <option value="SDS" selected>SDS</option>
+                  </select>
+                  <small id="fromhelp" class="form-text text-muted">Επιλογή εταιρείας που χρεώνεται/πληρώνει</small>
+                </div>
+                <div class="form-group">
+                  <label for="inputtype">Τύπος</label>
+                  <select name="type" class="custom-select mr-sm-2" id="inputtype">
+                    <option value="Χρέωση" selected="">Χρέωση</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label for="inputcomment">Αιτιολογία</label>
+                  <select name="comment" class="custom-select mr-sm-2" id="inputcomment">
+                    <option value="Τιμολόγιο" selected="">Τιμολόγιο</option>
+                    <option value="Μετρητά">Μετρητά</option>
+                  </select>
+                  <div class="form-group">
+                    <label for="inputamount">Ποσό</label>
+                    <input name="amount" type="text" class="form-control" id="inputamount" placeholder="Εισαγωγή Ποσού" required="">
+                  </div>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Ακύρωση</button>
+                  <button type="submit" class="btn btn-primary">Αποθήκευση</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- History Log -->
+    <div class="col-lg-10">
+      <h2>Κινήσεις SDS</h2>
+      <table class="table">
+        <tbody>
+          <tr class="tablerow">
+            <td class="tableheaddata">Επιλογή</td>
+            <td class="tableheaddata">Ημερομηνία</td>
+            <td class="tableheaddata">Τύπος</td>
+            <td class="tableheaddata">Από</td>
+            <td class="tableheaddata">Αιτιολογία</td>
+            <td class="tableheaddata">Ποσό</td>
+          </tr>
+          <% var length = 0; %>
+          <% logStatements.forEach(function(found) { %>
+          <tr class="tablerow">
+            <td class="tablebodydata">
+                <input class="checkbox" type="checkbox" name="checkbox" onChange="this.form.submit()" value="<%= found._id %>" disabled>
+            </td>
+            <td class="tablebodydata">
+              <%= formattedLogDates[length] %>
+            </td>
+            <% length++ %>
+            <td class="tablebodydata">
+              <%= found.type %>
+            </td>
+            <td class="tablebodydata">
+              <%= found.from %>
+            </td>
+            <td class="tablebodydata">
+              <%= found.comment %>
+            </td>
+            <td class="tablebodydata">
+              <%= found.amount %>
+            </td>
+          </tr>
+          <% }); %>
+        </tbody>
+      </table>
+      <div class="pagination text-center">
+          <% let numberCharge = parseInt(chargepage) %>
+          <% let numberLog = parseInt(log) %>
+          <% if (numberLog < logPages) { %>
+          <a class="btn btn-primary load" href="/customers/SDS/?log=<%=numberLog + 1%>&charge=1">Φόρτωση περισσοτέρων</a>
+          <% numberLog++ %>
+          <% } else if (numberLog === logPages ) { %>
+          <h3>Δεν υπάρχουν άλλες καταχωρήσεις</h3>  
+          <% } %>
+      </div>
+
+<!-- Charge Log -->
+  <h2 class="chargetitle">Χρεώσεις προς SDS</h2>
+  <table class="table">
+    <tbody>
+      <tr class="tablerow">
+        <td class="tableheaddata">Επιλογή</td>
+        <td class="tableheaddata">Ημερομηνία</td>
+        <td class="tableheaddata">Τύπος</td>
+        <td class="tableheaddata">Από</td>
+        <td class="tableheaddata">Αιτιολογία</td>
+        <td class="tableheaddata">Ποσό</td>
+      </tr>
+      <% var length = 0; %>
+      <% chargeStatements.forEach(function(found) { %>
+      <tr class="tablerow">
+        <td class="tablebodydata">
+          <!-- <form action="/checked" method="post"> -->
+            <input class="checkbox" type="checkbox" name="checkbox" onChange="this.form.submit()" value="<%= found._id %>">
+          <!-- </form> -->
+        </td>
+        <td class="tablebodydata">
+          <%= formattedChargeDate[length] %>
+        </td>
+        <% length++ %>
+        <td class="tablebodydata">
+          <%= found.type %>
+        </td>
+        <td class="tablebodydata">
+          <%= found.from %>
+        </td>
+        <td class="tablebodydata">
+          <%= found.comment %>
+        </td>
+        <td class="tablebodydata">
+          <%= found.amount %>
+        </td>
+      </tr>
+      <% }); %>
+    </tbody>
+  </table>
+  <div class="pagination text-center">
+      <% if (numberCharge < chargePages) { %>
+      <a class="btn btn-primary load" href="/customers/SDS/?log=1&charge=<%=numberCharge + 1%>">Φόρτωση περισσοτέρων</a>
+      <% numberCharge++ %>
+      <% } else if (numberCharge === chargePages ) { %>
+      <h3>Δεν υπάρχουν άλλες καταχωρήσεις</h3>  
+      <% } %>
+  </div>
+</div>
+</div>
+</div>
+<!-- include footer -->
+<%- include("footer") %>

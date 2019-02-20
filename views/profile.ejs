@@ -1,0 +1,42 @@
+<%- include("header") %>
+<!-- Intro Area -->
+<div class="dropdown">
+        <a class="nav-link dropdown-toggle" href="" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Προφίλ</a>
+        <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+          <a class="dropdown-item" href="/profile/<%=userid%>">Ρυθμίσεις</a>
+          <a class="dropdown-item" href="/logout">Αποσύνδεση</a>
+        </div>
+      </div>
+    </ul>
+    </div>
+    </nav>
+
+<div class="row intro">
+  <div class="col-lg-11">
+    <h1 class="section-title">Ρυθμίσεις Λογαριασμού</h1>
+  </div>
+</div>
+</div>
+</section>
+
+<div class="container-fluid" id="main">
+    <h3>Αλλαγή Κωδικού Πρόσβασης</h3>
+    <p class="error">Οι κωδικοί δεν συμφωνούν!</p>
+    <p class="flasherror"><%= errorMessage %></p>
+    <p class="flashinfo"><%= infoMessage %></p>
+    <form class="passwordchange" action="/profile/<%=userid%>" method="POST">
+        <div class="form-group">
+            <input name="oldPassword" type="password" placeholder="Τρέχων Κωδικός" class="form-control">
+        </div>
+        <div class="form-group">
+            <input id="password" name="newPassword" type="password" placeholder="Νέος Κωδικός" class="form-control">
+        </div>
+        <div class="form-group">
+            <input id="password1" name="newPassword2" type="password" placeholder="Επιβεβάιωση νέου Κωδικού" class="form-control">
+        </div>
+        <button id="passwordchange" type="submit" class="btn btn-primary">Ενημέρωση Κωδικού</button>
+    </form>
+</div>
+</div>
+<!-- include footer -->
+<%- include("footer") %>

@@ -1,0 +1,62 @@
+<!-- include header -->
+<%- include("header") %>
+
+<!-- Intro Area -->
+<div class="dropdown">
+    <a class="nav-link dropdown-toggle" href="" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Προφίλ</a>
+    <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+      <a class="dropdown-item" href="/profile/<%=userid%>">Ρυθμίσεις</a>
+      <a class="dropdown-item" href="/logout">Αποσύνδεση</a>
+    </div>
+  </div>
+</ul>
+</div>
+</nav>
+
+<div class="row intro">
+  <div class="col-lg-11">
+    <h1 class="section-title">Downloads</h1>
+  </div>
+</div>
+</div>
+</section>
+
+<!-- Vertical Navbar -->
+
+<div class="container-fluid" id="main">
+  <h2>Δρομολόγια SDS</h2>
+  <div class="card upload">
+    <div class="card-body">
+        <form action="/uploadOne" enctype="multipart/form-data" method="post">
+          <input type="file" name="fileOne">
+          <button class="btn"><i class="fas fa-upload fonts" id="upload-link"></i></button>
+        </form>
+    </div>
+  </div>
+  <p class="flasherror"><%= errorMessage %></p>
+  <div class="row">
+    <% founddetails.forEach(function(founddetails) { %>
+    <div class="col-lg-3">
+      <div class="selectbox">
+          <p><%= founddetails.name%></p>
+          <hr>
+          <ul class="download-ul">
+            <li class="download-list" id="download-position1">
+              <a href="" download="<%=founddetails.name%>"><button class="btn"><i class="fas fa-file-download fonts" id="download-link"></i></button></a>
+            </li>
+            <li class="download-list" id="download-position2">
+              <form action="/deleteFile" method="POST">
+                <input type="hidden" name="path" onChange="this.form.submit()" value="<%=founddetails.path%>">
+                <button class="btn" type="submit"><i class="far fa-trash-alt fonts" id="delete-link"></i></button>
+              </form>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <% }) %>
+  </div>
+</div>
+</div>
+
+<!-- include footer -->
+<%- include("footer") %>

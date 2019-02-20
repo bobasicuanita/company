@@ -1,0 +1,182 @@
+<%# include header %>
+<%- include("header") %>
+
+<%# comments array %>
+<% const comments = ["Έναντι", "Έναντι επιταγή", "Μετρητά","Καύσιμα","Διόδια","Service","Βλάβη","Μισθοδοσία","Πληρωμή Καυσιμα","Εφκα","Ένσημα","Φπα","Εφορια","Ενοίκιο Έδρας","Ενοίκιο αυτοκινήτου","Τέλη Κυκλοφορίας","Ασφάλεια","Γραμμάτιο","Λογίστρια","Ρύθμιση","Τηλέφωνα","Αποδείξεις","Διάφορα"] %>
+
+<!-- Intro Area -->
+
+<div class="dropdown">
+    <a class="nav-link dropdown-toggle" href="" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Προφίλ</a>
+    <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+      <a class="dropdown-item" href="/profile/<%=userid%>">Ρυθμίσεις</a>
+      <a class="dropdown-item" href="/logout">Αποσύνδεση</a>
+    </div>
+  </div>
+</ul>
+</div>
+</nav>
+
+<div class="row intro">
+  <div class="col-lg-11">
+    <h1 class="section-title">Ιστορικό Συναλλαγών</h1>
+  </div>
+</div>
+</div>
+</section>
+
+<!-- Vertical Navbar -->
+
+<div class="container-fluid" id="main">
+  <div class="row">
+    <div class="col-lg-2 list">
+      <ul class="nav navbar-text nav-pills nav-stacked sidebar">
+        <li class="nav-item listitem" id="newentry"><a class="listlink" data-toggle="modal" data-target="#exampleModalCenter">Νέα Καταχώρηση</a></li>
+
+        <li class="nav-item listitem">
+          <form action="/deletelog" method="post">
+            <a class="listlink deletefromlog">Διαγραφή</a></form>
+        </li>
+
+        <!-- <li class="nav-item listitem"><a class="listlink filternav">Φίλτρα</a>
+          <form action="/filter" method="post">
+            <ul class="nav navbar-text nav-pills nav-stacked filter hidfilter">
+              <li class="nav-item miniitem">
+                <input class="checkbox" id="type" type="checkbox" name="checkbox" onChange="this.form.submit()" value="Έσοδo">
+                <label for="type">Έσοδo</label>
+              </li>
+              <li class="nav-item miniitem">
+                <input class="checkbox" id="type" type="checkbox" name="checkbox" onChange="this.form.submit()" value="Έξοδo">
+                <label for="type">Έξοδo</label>
+              </li>
+              <li class="nav-item miniitem">
+                <input class="checkbox" id="from" type="checkbox" name="checkbox" onChange="this.form.submit()" value="Εταιρεία">
+                <label for="from">Εταιρεία</label>
+              </li>
+              <li class="nav-item miniitem">
+                <input class="checkbox" id="from" type="checkbox" name="checkbox" onChange="this.form.submit()" value="SDS">
+                <label for="from">SDS</label>
+              </li>
+              <% comments.forEach(function(element) { %>
+              <li class="nav-item miniitem">
+                <input class="checkbox" id="from" type="checkbox" name="checkbox" onChange="this.form.submit()" value="<%= element %>">
+                <label for="from">
+                  <%= element %></label>
+              </li>
+              <% }); %>
+            </ul>
+          </form>
+        </li> -->
+      </ul>
+
+      <!-- Pop-up -->
+      <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLongTitle">Προσθήκη Νέας Καταχώρησης</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <form action="/log/:page" method="post">
+                <div class="form-group">
+                  <label for="inputdate">Ημερομηνία</label>
+                  <input name="date" type="date" class="form-control" id="inputdate" required="">
+                </div>
+                <div class="form-group">
+                  <label for="inputfrom">Απο/Για</label>
+                  <select name="from" class="custom-select mr-sm-2" id="inputfrom">
+                    <option value="Εταιρεία" selected="">Εταιρεία</option>
+                    <option value="SDS">SDS</option>
+                  </select>
+                  <small id="fromhelp" class="form-text text-muted">Επιλογή εταιρείας που χρεώνεται/πληρώνει</small>
+                </div>
+                <div class="form-group">
+                  <label for="inputtype">Τύπος</label>
+                  <select name="type" class="custom-select mr-sm-2" id="inputtype">
+                    <option value="Έσοδo" selected="">Έσοδo</option>
+                    <option value="Έξοδo">Έξοδo</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label for="inputcomment">Αιτιολογία</label>
+                  <select name="comment" class="custom-select mr-sm-2" id="inputcomment">
+                    <% comments.forEach(function(element) { %>
+                    <option value="<%= element %>">
+                      <%= element %>
+                    </option>
+                    <% }); %>
+                  </select>
+                  <div class="form-group">
+                    <label for="inputamount">Ποσό</label>
+                    <input name="amount" type="text" class="form-control" id="inputamount" placeholder="Εισαγωγή Ποσού" required="">
+                  </div>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Ακύρωση</button>
+                  <button type="submit" class="btn btn-primary">Αποθήκευση</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- History Log -->
+    <div class="col-lg-10">
+      <table class="table">
+        <tbody>
+          <tr class="tablerow">
+            <td class="tableheaddata">Επιλογή</td>
+            <td class="tableheaddata">Ημερομηνία</td>
+            <td class="tableheaddata">Τύπος</td>
+            <td class="tableheaddata">Από</td>
+            <td class="tableheaddata">Αιτιολογία</td>
+            <td class="tableheaddata">Ποσό</td>
+          </tr>
+          <% let length = 0; %>
+          <% logStatements.forEach(function(found) { %>
+          <tr class="tablerow">
+            <td class="tablebodydata">
+              <!-- <form class="" action="/checked" method="post"> -->
+                <input class="checkbox" type="checkbox" name="checkbox" onChange="this.form.submit()" value="<%= found._id %>">
+              <!-- </form> -->
+            </td>
+            <td class="tablebodydata">
+              <%= formattedDates[length] %>
+            </td>
+            <% length++ %>
+            <td class="tablebodydata" id="type">
+              <%= found.type %>
+            </td>
+            <td class="tablebodydata">
+              <%= found.from %>
+            </td>
+            <td class="tablebodydata">
+              <%= found.comment %>
+            </td>
+            <td class="tablebodydata" id="logsamount">
+              <%= found.amount %>
+            </td>
+          </tr>
+          <% }); %>
+        </tbody>
+      </table>
+      <div class="pagination text-center">
+          <% let number = parseInt(page) %>
+          <% if (number < pages) { %>
+          <a class="btn btn-primary load" href="/log/<%= 1 + number %>">Φόρτωση περισσοτέρων</a>
+          <% number++ %>
+          <% } else if (number === pages ) { %>
+          <h3>Δεν υπάρχουν άλλες καταχωρήσεις</h3>  
+          <% } %>
+      </div>
+    </div>
+</div>
+</div>
+
+<!-- include footer -->
+<%- include("footer") %>

@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="el" dir="ltr">
+
+<head>
+  <meta charset="utf-8">
+  <title>Μεταφορές Καρασάββας</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.1/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
+
+<body>
+    <section id="title">
+        <div class="container-fluid">
+          <div class="row intro">
+             <div class="col-lg-11">
+               <h1>Επαναφορά Κωδικού</h1>
+            </div>
+          </div>
+    </section>
+
+          <div class="container-fluid" id="main">
+            <h3>Εισαγωγή Στοιχείων</h3>
+            <p class="flasherror"><%= errorMessage %></p>
+            <p class="flashinfo"><%= infoMessage %></p>
+            <form action="/forgot" method="POST">
+              <div class="form-group">
+                 <input name="username" type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Εισαγωγή email">
+              </div>
+              <button type="submit" class="btn btn-primary">Επαναφορά Κωδικού</button>
+            </form>
+            </div>
+          </div>
+<%- include("footer") %>
