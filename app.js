@@ -557,7 +557,7 @@ app.get("/customers/:customerName/",function(req, res) {
                 formattedLogDates:dates,
                 formattedChargeDate:chargeDates,
                 turnover:turnover,
-                income:turnover,
+                income:income,
                 log:log,
                 chargepage:chargepage,
                 logPages: Math.ceil(countLogs / perPage),
