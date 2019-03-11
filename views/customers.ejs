@@ -15,7 +15,7 @@
 
 <div class="row customerintro">
   <div class="col-lg-6">
-    <h1 class="section-title">Καρτέλα SDS</h1>
+    <h1 class="section-title">Καρτέλα <%=customerName%></h1>
   </div>
   <div class="col-lg-6">
     <div class="card card-totals">
@@ -71,7 +71,8 @@
                 <div class="form-group">
                   <label for="inputfrom">Απο/Για</label>
                   <select name="from" class="custom-select mr-sm-2" id="inputfrom">
-                    <option value="SDS" selected>SDS</option>
+                    <option value="SDS">SDS</option>
+                    <option value="LIME" selected>Lime</option>
                   </select>
                   <small id="fromhelp" class="form-text text-muted">Επιλογή εταιρείας που χρεώνεται/πληρώνει</small>
                 </div>
@@ -105,7 +106,7 @@
 
     <!-- History Log -->
     <div class="col-lg-10">
-      <h2>Κινήσεις SDS</h2>
+      <h2>Κινήσεις <%=customerName%></h2>
       <table class="table">
         <tbody>
           <tr class="tablerow">
@@ -154,7 +155,7 @@
       </div>
 
 <!-- Charge Log -->
-  <h2 class="chargetitle">Χρεώσεις προς SDS</h2>
+  <h2 class="chargetitle">Χρεώσεις προς <%=customerName%></h2>
   <table class="table">
     <tbody>
       <tr class="tablerow">

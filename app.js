@@ -62,6 +62,7 @@ app.use(passport.session());
 app.use(multer({storage : fileStorage, fileFilter:fileFilter}).single('fileOne'));
 
 ////////////////// Connecting to MongoDB Database ///////////////////////////
+// mongoose.connect('mongodb://localhost:3000/companyDB', {useNewUrlParser: true});
 
 mongoose.connect("mongodb+srv://admin-konstantinos:sikuanita02@cluster0-p6pal.mongodb.net/companyDB", {useNewUrlParser: true});
 mongoose.set('useCreateIndex', true);
@@ -506,73 +507,95 @@ app.get("/customers/:customerName/",function(req, res) {
   if (req.isAuthenticated()) {
     
     const customerName = _.upperCase(req.params.customerName);
-    
+
+    let turnover = 0;
+    let income = 0;
+
     let dates = [];
+
     let sdsPayments = [];
+    let limePayments = [];
+
     let chargeDates = [];
-    let chargeamounts = [];
+
+    let sdsChargeAmounts = [];
+    let limeChargeAmounts = [];
 
     let perPage = 5;
     let log = req.query.log || 1;
     let chargepage = req.query.charge || 1;
 
-    Log.find({}, function(err, totallogs) {
-      totallogs.forEach(function(log) {
-        if (log.type == 'Έσοδo') {
-          sdsPayments.push(log.amount);
-        }
-      });
-    }),
-
-    Charge.find({}, function(err, totalcharges) {
-      totalcharges.forEach(function(charge) {
-        chargeamounts.push(charge.amount);
-      });
-    }),
-
-    Log.find({from:customerName}).sort({date: 'desc'}).limit(perPage * log).exec(function(err, foundlogs) {
-      Log.countDocuments({from:customerName}).exec(function(err, countLogs) {
-      if (!err) {
-        foundlogs.forEach(function(log) {
-          let formattedLogDate = moment(log.date).format("L");
-          dates.push(formattedLogDate);
-        });
-        Charge.find({}).sort({date: 'desc'}).limit(perPage * chargepage).exec(function(err, foundcharges) {
-          Charge.countDocuments().exec(function(err, countCharges) {
-          if (!err) {
-            foundcharges.forEach(function(charge) {
-              let formattedChargeDate = moment(charge.date).format("L");
-              chargeDates.push(formattedChargeDate);
-            });
-
-
-            const reducer = (accumulator, currentValue) => accumulator + currentValue;
-            let turnover =  chargeamounts.reduce(reducer);
-            let income = sdsPayments.reduce(reducer);
-
-            res.render("customers", {
-                logStatements: foundlogs,
-                chargeStatements:foundcharges,
-                userid:req.user._id,
-                formattedLogDates:dates,
-                formattedChargeDate:chargeDates,
-                turnover:turnover,
-                income:income,
-                log:log,
-                chargepage:chargepage,
-                logPages: Math.ceil(countLogs / perPage),
-                chargePages: Math.ceil(countCharges / perPage)
-            });
-          } else {
-            res.send(err);
+      Log.find({}, function(err, totallogs) {
+        totallogs.forEach(function(log) {
+          if (log.type == 'Έσοδo' && log.from == "SDS") {
+            sdsPayments.push(log.amount);
+          } else if (log.type == 'Έσοδo' && log.from == "LIME") {
+            limePayments.push(log.amount);
           }
         });
-       })
-      } else {
-          res.send(err);
-      }
-    });
-    })
+      }),
+  
+      Charge.find({}, function(err, totalcharges) {
+        totalcharges.forEach(function(charge) {
+          if (charge.from == "SDS") {
+            sdsChargeAmounts.push(charge.amount);
+          } else {
+            limeChargeAmounts.push(charge.amount);
+          }
+        });
+      }),
+  
+      Log.find({from:customerName}).sort({date: 'desc'}).limit(perPage * log).exec(function(err, foundlogs) {
+        Log.countDocuments({from:customerName}).exec(function(err, countLogs) {
+        if (!err) {
+          foundlogs.forEach(function(log) {
+            let formattedLogDate = moment(log.date).format("L");
+            dates.push(formattedLogDate);
+          });
+          Charge.find({from:customerName}).sort({date: 'desc'}).limit(perPage * chargepage).exec(function(err, foundcharges) {
+            Charge.countDocuments().exec(function(err, countCharges) {
+            if (!err) {
+              foundcharges.forEach(function(charge) {
+                let formattedChargeDate = moment(charge.date).format("L");
+                chargeDates.push(formattedChargeDate);
+              });
+  
+  
+              const reducer = (accumulator, currentValue) => accumulator + currentValue;
+              if (customerName == "SDS") {
+                turnover =  sdsChargeAmounts.reduce(reducer).toFixed(2);
+                income = sdsPayments.reduce(reducer).toFixed(2);
+              } else {
+                turnover =  limeChargeAmounts.reduce(reducer).toFixed(2);
+                income = limePayments.reduce(reducer).toFixed(2);
+              }
+
+
+  
+              res.render("customers", {
+                  customerName: customerName,
+                  logStatements: foundlogs,
+                  chargeStatements:foundcharges,
+                  userid:req.user._id,
+                  formattedLogDates:dates,
+                  formattedChargeDate:chargeDates,
+                  turnover:turnover,
+                  income:income,
+                  log:log,
+                  chargepage:chargepage,
+                  logPages: Math.ceil(countLogs / perPage),
+                  chargePages: Math.ceil(countCharges / perPage)
+              });
+            } else {
+              res.send(err);
+            }
+          });
+         })
+        } else {
+            res.send(err);
+        }
+      });
+      })
   } else {
     req.flash("error", "Παρακαλώ συνδεθείτε/Εγγραφείτε.")
     res.redirect("/");
