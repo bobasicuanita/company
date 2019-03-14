@@ -144,7 +144,7 @@
         </tbody>
       </table>
       <div class="pagination text-center">
-          <% let numberCharge = parseInt(chargepage) %>
+
           <% let numberLog = parseInt(log) %>
           <% if (numberLog < logPages) { %>
           <a class="btn btn-primary load" href="/customers/SDS/?log=<%=numberLog + 1%>&charge=1">Φόρτωση περισσοτέρων</a>
@@ -195,8 +195,9 @@
     </tbody>
   </table>
   <div class="pagination text-center">
+      <% let numberCharge = parseInt(chargepage) %>
       <% if (numberCharge < chargePages) { %>
-      <a class="btn btn-primary load" href="/customers/SDS/?log=1&charge=<%=numberCharge + 1%>">Φόρτωση περισσοτέρων</a>
+      <a class="btn btn-primary load" href="/customers/<%=customerName%>/?log=1&charge=<%=numberCharge + 1%>">Φόρτωση περισσοτέρων</a>
       <% numberCharge++ %>
       <% } else if (numberCharge === chargePages ) { %>
       <h3>Δεν υπάρχουν άλλες καταχωρήσεις</h3>  
